@@ -1,3 +1,5 @@
+monitor: monitoruser.c
+	gcc -o monitoruser monitoruser.c
 ifneq ($(KERNELRELEASE),) 
 	obj-m += nmonitor.o
 else 

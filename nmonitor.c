@@ -1,41 +1,21 @@
-#include <linux/kernel.h>
-#include <linux/module.h>
-#include <linux/init.h>
-#include <linux/netfilter.h>
-#include <linux/ip.h>
-#include <asm/unistd.h>
-#include <linux/netlink.h>
-#include <linux/tcp.h>
-#include <linux/udp.h>
-#include <linux/proc_fs.h>
-#include <linux/fs.h>
-#include <linux/types.h>
-#include <linux/inet.h>
-#include <linux/moduleparam.h>
+#include "nmonitor.h"
 
 #ifndef __KERNEL__
 #define __KERNEL__
 #endif
 
+/**********************/
+/* module information */
+/**********************/
 MODULE_LICENSE("GPL v2");
-MODULE_AUTHOR("Roy Huang, Zhiyuan Zhao");
-MODULE_DESCRIPTION("An network monitor and filter LKM");
+MODULE_AUTHOR("Roy Huang, Zhiyuan Zhao, and Hecheng Zhang");
+MODULE_DESCRIPTION("An custom network monitor and filter LKM");
 
+/* check header file for varibles and functions used and their documentations*/
 
-/* hook options stuct for both receiving and sending */
-struct nf_hook_ops nfhook_recv;
-struct nf_hook_ops nfhook_send;
-
-struct iphdr *ip_header;
-struct udphdr *udp_header;
-struct tcphdr *tcp_header;
-
-/* module parameters needed */
-static int mode;
-static char* addr[100];
-static int count_addr;
-static unsigned short port[100];
-static int count_port;
+/********************************************************************/
+/* initialization and implementation of varibles and function below */
+/********************************************************************/
 
 /* get parameters values from options */
 module_param(mode, int, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
@@ -46,29 +26,20 @@ module_param_array(addr, charp, &count_addr, 0644);
 MODULE_PARM_DESC(addr, "an string array of ip addresses");
 
 module_param_array(port, ushort, &count_port, 0644);
-MODULE_PARM_DESC(port, "an unsigned short array of port number");
+MODULE_PARM_DESC(port, "an unsigned short array of port numbers");
 
-/**
- * Check if the ip address and port number should be blocked according to 
- * user's configuration in the file /etc/modprobe.d/nmonitor.conf.
- *
- * @ip_addr: the ip address of the pack, source address for pack received and 
- * 				destination address for pack sending out.
- * @p: the port number of the pack
- *
- * Return true 	- the @ip_addr and @p are in the list and mode is 0 
- * 				- the @ip_addr and @p are not in the list and mode is 1	
- * 	      false - the @ip_addr and @p are in the list and mode is 1
- * 				- the @ip_addr and @p are not in the list and mode is 0
- */
+
 bool is_blocked(__be32 ip_addr, unsigned short p) {
+	
+	/* declaration */
 	bool in_list;
 	bool blocked;
 	int i;
 	int j;
 	__be32 blocked_ip;
 	unsigned short blocked_port;
-
+	
+	/* initialization */
 	in_list = false;
 
 	/* iterate through the ip addresses list from the configuration file */
@@ -89,7 +60,7 @@ bool is_blocked(__be32 ip_addr, unsigned short p) {
 	
 	/* different results for different mode 
 	 * could use expression like blocked = in_list && mode, but for easier 
-	 * readability, chose use if-else statement 
+	 * to understand and readability, chose use if-else statement to handle
 	 */
 	if (mode == 0) {		// blacklist
 		if (in_list){
@@ -111,7 +82,8 @@ bool is_blocked(__be32 ip_addr, unsigned short p) {
 unsigned int hook_recv_fn(void *priv,
 		struct sk_buff *skb,
 		const struct nf_hook_state *state){
-
+	
+	/* declaration */
 	unsigned short dest_port;
 
 	/* hard coding for demo purpose */
@@ -126,7 +98,8 @@ unsigned int hook_recv_fn(void *priv,
 			tcp_header = tcp_hdr(skb);
 			/* translate from network bits order to host bits order */
 			dest_port = ntohs(tcp_header->dest);
-
+	
+			/* drop the pack if it should be blocked */
 			if (is_blocked(ip_header->saddr, dest_port)) {
 				pr_info("----------------------------------------------------\n"
 						"Dropped pack received from: %pI4\n"
@@ -149,6 +122,7 @@ unsigned int hook_recv_fn(void *priv,
 			/* translate from network bits order to host bits order */
 			dest_port = ntohs(udp_header->dest);
 
+			/* drop the pack if it should be blocked */
 			if (is_blocked(ip_header->saddr, dest_port)) {
 				pr_info("----------------------------------------------------\n"
 						"Dropped pack received from: %pI4\n"
@@ -178,7 +152,8 @@ unsigned int hook_recv_fn(void *priv,
 unsigned int hook_send_fn(void *priv, 
 		struct sk_buff *skb, 
 		const struct nf_hook_state *state) {
-
+	
+	/* declaration */
 	unsigned short dest_port;
 
 	/* hard coding for demo purpose */
@@ -194,6 +169,7 @@ unsigned int hook_send_fn(void *priv,
 			/* translate from network bits order to host bits order */
 			dest_port = ntohs(tcp_header->dest);
 
+			/* drop the pack if it should be blocked */
 			if (is_blocked(ip_header->daddr, dest_port)) {
 				pr_info("----------------------------------------------------\n"
 						"Dropped pack sending to: %pI4\n"
@@ -216,6 +192,7 @@ unsigned int hook_send_fn(void *priv,
 			/* translate from network bits order to host bits order */
 			dest_port = ntohs(udp_header->dest);
 
+			/* drop the pack if it should be blocked */
 			if (is_blocked(ip_header->daddr, dest_port)) {
 				pr_info("----------------------------------------------------\n"
 						"Dropped pack sending to: %pI4\n"
@@ -252,6 +229,7 @@ int __init monitor_load(void){
 	}
 
 	/* set hook option for pre routing */
+	/* when pack arrived, hook_recv_fn will be triggered */
 	nfhook_recv.hook = hook_recv_fn;
 	nfhook_recv.hooknum = NF_INET_PRE_ROUTING;	// resigister pre routing hook
 	nfhook_recv.pf = PF_INET;
@@ -262,6 +240,7 @@ int __init monitor_load(void){
 	}
 
 	/* set hook option for post routing */
+	/* when pack is about to be sent, hook_send_fn will be triggered */
 	nfhook_send.hook = hook_send_fn;
 	nfhook_send.hooknum = NF_INET_POST_ROUTING;	// resigister porst routing hook
 	nfhook_send.pf = PF_INET;
@@ -276,7 +255,7 @@ int __init monitor_load(void){
 /* module exit function */
 void __exit monitor_exit(void){
 
-	/* unresigter hook when exiting the module */
+	/* unresigter hook_ops when exiting the module */
 	nf_unregister_net_hook(&init_net, &nfhook_recv);
 	nf_unregister_net_hook(&init_net, &nfhook_send);
 	return;

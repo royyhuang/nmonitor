@@ -82,7 +82,7 @@ unsigned int hook_recv_fn(void *priv,
  * Return NF_ACCEPT if the pack in @skb should not be blocked and NF_DROP if 
  * it should be, which allows netfileter to accept the pack or drop it.
  */
-unsigned int hook_recv_fn(void *priv,
+unsigned int hook_send_fn(void *priv,
 		struct sk_buff *skb,
 		const struct nf_hook_state *state);
 

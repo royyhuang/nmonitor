@@ -47,6 +47,7 @@ void main(void) {
     int num = 0;
 	//Tokenize and store the origional configration.
     split(strLine, " ", ptr, & num);
+	printf("Mode = 0, black list mode; mode = 1, white list mode.");
     printf("Current configration:\n");
     for (int i = 0; i < num; i++) {
         printf("%s\n", ptr[i]);
@@ -64,7 +65,7 @@ void main(void) {
 		getchar();
 		// White list mode
         if (mode == 'W' || mode == 'w') {
-            fprintf(config, "mode=0 addr=");
+            fprintf(config, "mode=1 addr=");
             printf("Please enter one IP address you want to add into white list:\n");
             printf("Please follow this format and end with enter:\n");
             printf("XXXX.XXXX.XXXX.XXXX\n");
@@ -114,7 +115,7 @@ void main(void) {
             }
 			//Black list mode
         } else if (mode == 'B' || mode == 'b') {
-            fprintf(config, "mode=1 addr=");
+            fprintf(config, "mode=0 addr=");
             printf("Please enter one IP address you want to add into white list:\n");
             printf("Please follow this format and end with enter:\n");
             printf("XXXX.XXXX.XXXX.XXXX\n");

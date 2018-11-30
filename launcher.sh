@@ -1,0 +1,21 @@
+#!/bin/bash -f
+make
+make install
+echo "Welcome to use Network Monitor."
+echo "Press [1] to enter configration interface; [2] to skip config, [3] to exit."
+read -p "Please enter [1] or any other key, and press enter:" option
+
+if [ $option == 1 ]
+then
+	./config
+	sudo rmmod nmonitor
+	sudo modprobe -C nmonitor.conf nmonitor
+elif [ $option == 2 ]
+then
+	sudo modprobe -C nmonitor.conf nmonitor
+elif [ $option == 3 ]
+then
+   echo "Goodbye"
+else
+   echo "Invalid input."
+fi

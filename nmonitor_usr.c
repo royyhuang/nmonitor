@@ -43,32 +43,29 @@ void main(void) {
     size_t len = 0;
     char * strLine;;
     int read = getline( &strLine, &len, config);
-    char * ptr[50] = {0};
+    char * ptr[100] = {0};
     int num = 0;
-	//Tokenize and store the origional configration.
     split(strLine, " ", ptr, & num);
-	printf("Mode = 0, black list mode; mode = 1, white list mode.");
     printf("Current configration:\n");
-    for (int i = 0; i < num; i++) {
+    for (int i = 2; i < num; i++) {
         printf("%s\n", ptr[i]);
     }
-
+	if(num != 0)
+	{
     printf("Do you want to add IP and Port number(A), or rewrite the configration(R)?");
     scanf("%c", & addOrRe);
-	//Consume empty line
 	getchar();
-	//The user wants to rewrite the file. In this way, s/he is able to change the mode.
     if (addOrRe == 'R' || addOrRe == 'r') {
         config = fopen("nmonitor.conf", "w+");
+		fprintf(config, "options nmonitor ");
         printf("Please select black(B/b) list or white(W/w) list mode.");
         scanf("%c", &mode);
 		getchar();
-		// White list mode
         if (mode == 'W' || mode == 'w') {
             fprintf(config, "mode=1 addr=");
             printf("Please enter one IP address you want to add into white list:\n");
             printf("Please follow this format and end with enter:\n");
-            printf("XXXX.XXXX.XXXX.XXXX\n");
+            printf("XXX.XXX.XXX.XXX\n");
             scanf("%d.%d.%d.%d", & ip1, & ip2, & ip3, & ip4);
 			getchar();
             if (ip1 >= 0 && ip1 < 255 && ip2 >= 0 && ip2 < 255 && ip3 >= 0 && ip3 < 255 && ip4 >= 0 && ip4 < 255) {
@@ -83,7 +80,7 @@ void main(void) {
                 }
                 printf("Please enter one IP address you want to add into white list:\n");
                 printf("Please follow this format and end with enter:\n");
-                printf("XXXX.XXXX.XXXX.XXXX\n");
+                printf("XXX.XXX.XXX.XXX\n");
                 scanf("%d.%d.%d.%d", & ip1, & ip2, & ip3, & ip4);
 				getchar();
                 fprintf(config, ",%d.%d.%d.%d", ip1, ip2, ip3, ip4);
@@ -92,7 +89,7 @@ void main(void) {
             fprintf(config, " port=");
             printf("Please enter one port number you want to add into white list:\n");
             printf("Please follow this format and end with enter:\n");
-            printf("XXXX\n");
+            printf("XXXXX\n");
             scanf("%d", & port);
 			getchar();
             if (port >= 0 && port < 65535) {
@@ -107,18 +104,17 @@ void main(void) {
                 }
                 printf("Please enter one port number you want to add into white list:\n");
                 printf("Please follow this format and end with enter:\n");
-                printf("XXXX\n");
+                printf("XXXXX\n");
                 scanf("%d", & port);
 				getchar();
                 fprintf(config, ",%d", port);
 
             }
-			//Black list mode
         } else if (mode == 'B' || mode == 'b') {
             fprintf(config, "mode=0 addr=");
             printf("Please enter one IP address you want to add into white list:\n");
             printf("Please follow this format and end with enter:\n");
-            printf("XXXX.XXXX.XXXX.XXXX\n");
+            printf("XXX.XXX.XXX.XXX\n");
             scanf("%d.%d.%d.%d", & ip1, & ip2, & ip3, & ip4);
 			getchar();
             if (ip1 >= 0 && ip1 < 255 && ip2 >= 0 && ip2 < 255 && ip3 >= 0 && ip3 < 255 && ip4 >= 0 && ip4 < 255) {
@@ -133,7 +129,7 @@ void main(void) {
                 }
                 printf("Please enter one IP address you want to add into white list:\n");
                 printf("Please follow this format and end with enter:\n");
-                printf("XXXX.XXXX.XXXX.XXXX\n");
+                printf("XXX.XXX.XXX.XXX\n");
                 scanf("%d.%d.%d.%d", & ip1, & ip2, & ip3, & ip4);
 				getchar();
                 fprintf(config, ",%d.%d.%d.%d", ip1, ip2, ip3, ip4);
@@ -142,7 +138,7 @@ void main(void) {
             fprintf(config, " port=");
             printf("Please enter one port number you want to add into white list:\n");
             printf("Please follow this format and end with enter:\n");
-            printf("XXXX\n");
+            printf("XXXXX\n");
             scanf("%d", & port);
 			getchar();
             if (port >= 0 && port < 65535) {
@@ -157,7 +153,7 @@ void main(void) {
                 }
                 printf("Please enter one port number you want to add into white list:\n");
                 printf("Please follow this format and end with enter:\n");
-                printf("XXXX\n");
+                printf("XXXXX\n");
                 scanf("%d", & port);
 				getchar();
                 fprintf(config, ",%d", port);
@@ -166,11 +162,12 @@ void main(void) {
         } else {
             printf("Wrong input.");
         }
-		//The user wants to add new IP or port to the file. In this case s/he can not change the mode.
     } else if (addOrRe == 'A' || addOrRe == 'a') {
 		config = fopen("nmonitor.conf", "w+");
-        fprintf(config,"%s", ptr[0]);
-        fprintf(config," %s",ptr[1]);
+	fprintf(config,"%s", ptr[0]);
+	fprintf(config," %s", ptr[1]);
+        fprintf(config," %s", ptr[2]);
+        fprintf(config," %s",ptr[3]);
         while (ip1 >= 0 && ip1 < 255 && ip2 >= 0 && ip2 < 255 && ip3 >= 0 && ip3 < 255 && ip4 >= 0 && ip4 < 255) {
             printf("Continue to add a IP address? Yes to add, no to skip to port(y/n)\n");
             scanf("%c", & cont);
@@ -180,12 +177,12 @@ void main(void) {
             }
             printf("Please enter one IP address you want to add into white list:\n");
             printf("Please follow this format and end with enter:\n");
-            printf("XXXX.XXXX.XXXX.XXXX\n");
+            printf("XXX.XXX.XXX.XXX\n");
             scanf("%d.%d.%d.%d", & ip1, & ip2, & ip3, & ip4);
 			getchar();
             fprintf(config, ",%d.%d.%d.%d", ip1, ip2, ip3, ip4);
         }
-        fprintf(config," %s",ptr[2]);
+        fprintf(config," %s",ptr[4]);
         while (port >= 0 && port < 65535) {
 			printf("Continue to add a port number?(y/n)\n");
             scanf("%c", & cont);
@@ -195,11 +192,122 @@ void main(void) {
             }
             printf("Please enter one port number you want to add into white list:\n");
             printf("Please follow this format and end with enter:\n");
-            printf("XXXX\n");
+            printf("XXXXX\n");
             scanf("%d", & port);
 			getchar();
             fprintf(config, ",%d", port);
         }
 
     }
+	}
+	else{
+		printf("The configration is empty. Please setup a new one.");
+        config = fopen("nmonitor.conf", "w+");
+		fprintf(config, "options nmonitor ");
+        printf("Please select black(B/b) list or white(W/w) list mode.");
+        scanf("%c", &mode);
+		getchar();
+        if (mode == 'W' || mode == 'w') {
+            fprintf(config, "mode=1 addr=");
+            printf("Please enter one IP address you want to add into white list:\n");
+            printf("Please follow this format and end with enter:\n");
+            printf("XXX.XXX.XXX.XXX\n");
+            scanf("%d.%d.%d.%d", & ip1, & ip2, & ip3, & ip4);
+			getchar();
+            if (ip1 >= 0 && ip1 < 255 && ip2 >= 0 && ip2 < 255 && ip3 >= 0 && ip3 < 255 && ip4 >= 0 && ip4 < 255) {
+                fprintf(config, "%d.%d.%d.%d", ip1, ip2, ip3, ip4);
+            }
+            while (ip1 >= 0 && ip1 < 255 && ip2 >= 0 && ip2 < 255 && ip3 >= 0 && ip3 < 255 && ip4 >= 0 && ip4 < 255) {
+                printf("Continue?(y/n)\n");
+                scanf("%c", & cont);
+				getchar();
+                if (!(cont == 'Y' || cont == 'y')) {
+                    break;
+                }
+                printf("Please enter one IP address you want to add into white list:\n");
+                printf("Please follow this format and end with enter:\n");
+                printf("XXX.XXX.XXX.XXX\n");
+                scanf("%d.%d.%d.%d", & ip1, & ip2, & ip3, & ip4);
+				getchar();
+                fprintf(config, ",%d.%d.%d.%d", ip1, ip2, ip3, ip4);
+            }
+
+            fprintf(config, " port=");
+            printf("Please enter one port number you want to add into white list:\n");
+            printf("Please follow this format and end with enter:\n");
+            printf("XXXXX\n");
+            scanf("%d", & port);
+			getchar();
+            if (port >= 0 && port < 65535) {
+                fprintf(config, "%d", port);
+            }
+            while (port >= 0 && port < 65535) {
+                printf("Continue?(y/n)\n");
+                scanf("%c", & cont);
+				getchar();
+                if (!(cont == 'Y' || cont == 'y')) {
+                    break;
+                }
+                printf("Please enter one port number you want to add into white list:\n");
+                printf("Please follow this format and end with enter:\n");
+                printf("XXXXX\n");
+                scanf("%d", & port);
+				getchar();
+                fprintf(config, ",%d", port);
+
+            }
+        } else if (mode == 'B' || mode == 'b') {
+            fprintf(config, "mode=0 addr=");
+            printf("Please enter one IP address you want to add into white list:\n");
+            printf("Please follow this format and end with enter:\n");
+            printf("XXX.XXX.XXX.XXX\n");
+            scanf("%d.%d.%d.%d", & ip1, & ip2, & ip3, & ip4);
+			getchar();
+            if (ip1 >= 0 && ip1 < 255 && ip2 >= 0 && ip2 < 255 && ip3 >= 0 && ip3 < 255 && ip4 >= 0 && ip4 < 255) {
+                fprintf(config, "%d.%d.%d.%d", ip1, ip2, ip3, ip4);
+            }
+            while (ip1 >= 0 && ip1 < 255 && ip2 >= 0 && ip2 < 255 && ip3 >= 0 && ip3 < 255 && ip4 >= 0 && ip4 < 255) {
+                printf("Continue?(y/n)\n");
+                scanf("%c", & cont);
+				getchar();
+                if (!(cont == 'Y' || cont == 'y')) {
+                    break;
+                }
+                printf("Please enter one IP address you want to add into white list:\n");
+                printf("Please follow this format and end with enter:\n");
+                printf("XXX.XXX.XXX.XXX\n");
+                scanf("%d.%d.%d.%d", & ip1, & ip2, & ip3, & ip4);
+				getchar();
+                fprintf(config, ",%d.%d.%d.%d", ip1, ip2, ip3, ip4);
+            }
+
+            fprintf(config, " port=");
+            printf("Please enter one port number you want to add into white list:\n");
+            printf("Please follow this format and end with enter:\n");
+            printf("XXXXX\n");
+            scanf("%d", & port);
+			getchar();
+            if (port >= 0 && port < 65535) {
+                fprintf(config, "%d", port);
+            }
+            while (port >= 0 && port < 65535) {
+                printf("Continue?(y/n)\n");
+                scanf("%c", & cont);
+				getchar();
+                if (!(cont == 'Y' || cont == 'y')) {
+                    break;
+                }
+                printf("Please enter one port number you want to add into white list:\n");
+                printf("Please follow this format and end with enter:\n");
+                printf("XXXXX\n");
+                scanf("%d", & port);
+				getchar();
+                fprintf(config, ",%d", port);
+
+            }
+        } else {
+            printf("Wrong input.");
+        }
+    
+	}
 }

@@ -45,6 +45,7 @@ void main(void) {
     int read = getline( &strLine, &len, config);
     char * ptr[50] = {0};
     int num = 0;
+	//Tokenize and store the origional configration.
     split(strLine, " ", ptr, & num);
     printf("Current configration:\n");
     for (int i = 0; i < num; i++) {
@@ -53,12 +54,15 @@ void main(void) {
 
     printf("Do you want to add IP and Port number(A), or rewrite the configration(R)?");
     scanf("%c", & addOrRe);
+	//Consume empty line
 	getchar();
+	//The user wants to rewrite the file. In this way, s/he is able to change the mode.
     if (addOrRe == 'R' || addOrRe == 'r') {
         config = fopen("nmonitor.conf", "w+");
         printf("Please select black(B/b) list or white(W/w) list mode.");
         scanf("%c", &mode);
 		getchar();
+		// White list mode
         if (mode == 'W' || mode == 'w') {
             fprintf(config, "mode=0 addr=");
             printf("Please enter one IP address you want to add into white list:\n");
@@ -108,6 +112,7 @@ void main(void) {
                 fprintf(config, ",%d", port);
 
             }
+			//Black list mode
         } else if (mode == 'B' || mode == 'b') {
             fprintf(config, "mode=1 addr=");
             printf("Please enter one IP address you want to add into white list:\n");
@@ -160,6 +165,7 @@ void main(void) {
         } else {
             printf("Wrong input.");
         }
+		//The user wants to add new IP or port to the file. In this case s/he can not change the mode.
     } else if (addOrRe == 'A' || addOrRe == 'a') {
 		config = fopen("nmonitor.conf", "w+");
         fprintf(config,"%s", ptr[0]);

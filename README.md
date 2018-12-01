@@ -35,6 +35,8 @@ Then run the config program by:
 ```
 $ ./config
 ```
+In case of invalid input during configuration, please restart ./config and choose [R]ewrite mode. Config will clear nmonitor.conf, enabling re-editing.
+
 If the kernel module is already running, you need to remove the module to make the change affect by:
 ```
 $ sudo rmmod nmonitor

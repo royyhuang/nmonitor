@@ -112,7 +112,7 @@ void main(void) {
             }
         } else if (mode == 'B' || mode == 'b') {
             fprintf(config, "mode=0 addr=");
-            printf("Please enter one IP address you want to add into white list:\n");
+            printf("Please enter one IP address you want to add into black list:\n");
             printf("Please follow this format and end with enter:\n");
             printf("XXX.XXX.XXX.XXX\n");
             scanf("%d.%d.%d.%d", & ip1, & ip2, & ip3, & ip4);
@@ -127,7 +127,7 @@ void main(void) {
                 if (!(cont == 'Y' || cont == 'y')) {
                     break;
                 }
-                printf("Please enter one IP address you want to add into white list:\n");
+                printf("Please enter one IP address you want to add into black list:\n");
                 printf("Please follow this format and end with enter:\n");
                 printf("XXX.XXX.XXX.XXX\n");
                 scanf("%d.%d.%d.%d", & ip1, & ip2, & ip3, & ip4);
@@ -136,7 +136,7 @@ void main(void) {
             }
 
             fprintf(config, " port=");
-            printf("Please enter one port number you want to add into white list:\n");
+            printf("Please enter one port number you want to add into black list:\n");
             printf("Please follow this format and end with enter:\n");
             printf("XXXXX\n");
             scanf("%d", & port);
@@ -151,7 +151,7 @@ void main(void) {
                 if (!(cont == 'Y' || cont == 'y')) {
                     break;
                 }
-                printf("Please enter one port number you want to add into white list:\n");
+                printf("Please enter one port number you want to add into black list:\n");
                 printf("Please follow this format and end with enter:\n");
                 printf("XXXXX\n");
                 scanf("%d", & port);
@@ -175,7 +175,7 @@ void main(void) {
             if (!(cont == 'Y' || cont == 'y')) {
                 break;
             }
-            printf("Please enter one IP address you want to add into white list:\n");
+            printf("Please enter one IP address you want to add into the list:\n");
             printf("Please follow this format and end with enter:\n");
             printf("XXX.XXX.XXX.XXX\n");
             scanf("%d.%d.%d.%d", & ip1, & ip2, & ip3, & ip4);
@@ -190,7 +190,7 @@ void main(void) {
             if (!(cont == 'Y' || cont == 'y')) {
                 break;
             }
-            printf("Please enter one port number you want to add into white list:\n");
+            printf("Please enter one port number you want to add into the list:\n");
             printf("Please follow this format and end with enter:\n");
             printf("XXXXX\n");
             scanf("%d", & port);
@@ -258,7 +258,7 @@ void main(void) {
             }
         } else if (mode == 'B' || mode == 'b') {
             fprintf(config, "mode=0 addr=");
-            printf("Please enter one IP address you want to add into white list:\n");
+            printf("Please enter one IP address you want to add into black list:\n");
             printf("Please follow this format and end with enter:\n");
             printf("XXX.XXX.XXX.XXX\n");
             scanf("%d.%d.%d.%d", & ip1, & ip2, & ip3, & ip4);
@@ -273,7 +273,7 @@ void main(void) {
                 if (!(cont == 'Y' || cont == 'y')) {
                     break;
                 }
-                printf("Please enter one IP address you want to add into white list:\n");
+                printf("Please enter one IP address you want to add into black list:\n");
                 printf("Please follow this format and end with enter:\n");
                 printf("XXX.XXX.XXX.XXX\n");
                 scanf("%d.%d.%d.%d", & ip1, & ip2, & ip3, & ip4);
@@ -282,7 +282,7 @@ void main(void) {
             }
 
             fprintf(config, " port=");
-            printf("Please enter one port number you want to add into white list:\n");
+            printf("Please enter one port number you want to add into black list:\n");
             printf("Please follow this format and end with enter:\n");
             printf("XXXXX\n");
             scanf("%d", & port);
@@ -297,7 +297,7 @@ void main(void) {
                 if (!(cont == 'Y' || cont == 'y')) {
                     break;
                 }
-                printf("Please enter one port number you want to add into white list:\n");
+                printf("Please enter one port number you want to add into black list:\n");
                 printf("Please follow this format and end with enter:\n");
                 printf("XXXXX\n");
                 scanf("%d", & port);

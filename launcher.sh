@@ -1,4 +1,5 @@
 #!/bin/bash -f
+sudo depmod -a
 sudo make
 sudo make install
 sudo insmod nmonitor.ko
@@ -9,7 +10,7 @@ echo " "
 echo "-------------------------------------------------------------------------"
 echo "Welcome to use Network Monitor."
 echo "Press [1] to enter configration interface; [2] to skip config, [3] to remove module, and [4] to exit."
-read -p "Please enter [1] or any other key, and press enter:" option
+read -p "Please enter your option and press enter:" option
 
 if [ $option == 1 ]
 then

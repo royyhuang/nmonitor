@@ -1,6 +1,6 @@
 #!/bin/bash -f
-make
-make install
+sudo make
+sudo make install
 sudo insmod nmonitor.ko
 
 clear
